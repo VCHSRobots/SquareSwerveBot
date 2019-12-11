@@ -26,8 +26,9 @@ This code is a Command Based Robot.  The core of the swerve drive related code i
 
 There are various commands, where the more significant ones are: 
 
-  SwerveDriveSystem               -- BasicDriveCommand for simple driving
-  CalibrateSwerveSystemCommand    -- For Calibration of the swerve units at start up. 
+ * SwerveDriveSystem               -- BasicDriveCommand for simple driving
+ * CalibrateSwerveSystemCommand    -- For Calibration of the swerve units at start up. 
+
 
 The actual calibration sequence is contained in CalibratedSwerveUnitCommand.  Four of these are called on by CalibrateSwerveSystemCommand.
 
@@ -66,5 +67,7 @@ In this code, RobotMap.java is used to set the locations of UI elements for each
 
 ## Testing System
 This code also features a pattern for test code.  See the package frc.robot.tests.   If you derive from "TestBase", and then add your new class to "TestManager" then you can easily integrate tests into a menu system that works with shuffleboard. 
+
+![Square Swerve Bot](https://github.com/VCHSRobots/SquareSwerveBot/blob/master/gradlew.bat)
 
 

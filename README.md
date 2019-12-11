@@ -68,6 +68,5 @@ In this code, RobotMap.java is used to set the locations of UI elements for each
 ## Testing System
 This code also features a pattern for test code.  See the package frc.robot.tests.   If you derive from "TestBase", and then add your new class to "TestManager" then you can easily integrate tests into a menu system that works with shuffleboard. 
 
-![Square Swerve Bot](https://github.com/VCHSRobots/SquareSwerveBot/blob/master/gradlew.bat)
-
+![Square Swerve Bot](https://github.com/VCHSRobots/SquareSwerveBot/blob/master/PicSwerveBot2019.jpg)
 

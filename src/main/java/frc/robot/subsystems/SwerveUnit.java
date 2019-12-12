@@ -117,7 +117,7 @@ public class SwerveUnit extends SendableBase {
         
         // The motors are capable of over 360 degrees/sec with constansts below.
         m_steeringMotor.config_kF(0, 0.5);  // Produces about 220 degrees/sec
-        m_steeringMotor.config_kP(0, 1.0);  // Set K constant.
+        m_steeringMotor.config_kP(0, 1.0);  // Set P constant.
         m_steeringMotor.config_kI(0, 0.0);
         m_steeringMotor.config_kD(0, 0.0);
         // When the steering motor is used in seek mode

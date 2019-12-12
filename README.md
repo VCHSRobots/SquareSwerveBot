@@ -26,9 +26,10 @@ This code is a Command Based Robot.  The core of the swerve drive related code i
 
 There are various commands, where the more significant ones are: 
 
- * SwerveDriveSystem               -- BasicDriveCommand for simple driving
+ * AdvancedDriveCommand            -- True 3 degress of freedom driving.
+ * MoonDriveCommand                -- Orbits an object while keeping the front of the robot facing the object.
+ * BasicDriveCommand               -- First try at drive control -- doesn't work very well.
  * CalibrateSwerveSystemCommand    -- For Calibration of the swerve units at start up. 
-
 
 The actual calibration sequence is contained in CalibratedSwerveUnitCommand.  Four of these are called on by CalibrateSwerveSystemCommand.
 
@@ -38,17 +39,30 @@ As is the pattern of a command based robot, there is OI.java which ties the comm
 All motors are controlled by PID loops so that they can be commanded with human understood units.  The steering rings on the swerve units can be set to spin at a given RPM, or to a absolute angle, in degrees, referenced to the front of the robot.  The steering rings can spin faster than 360 degrees per second. The Drive motors are commanded in units of feet per second.
 
 ## How To Drive
-The current drive is a simple point and go.  The X axis of the joystick controls the heading, and the Y axis controls the drive motor.  The heading is relative to the current orientation of the robot itself, not the field. 
+The current drive offers true 3-degrees of freedom.  The X and Y of the joystick are used to indicate direction and speed.  Just point and go.  The Z axis (Twist) will contorl the robot's rotation about it's center, even while moving.
 
-Testing was done with a Logitech Extreme 3D joystick which provides X, Y, Twist, and Trim paddles, as well as 12 buttons. See OI.java to reconfigure for a different joystick or game paddle -- but by default a XBox or PS3 controller should work fine.  The buttons on the Logitech Extreme joystick do the following:
+Testing was done with a Logitech Extreme 3D joystick which provides X, Y, Twist, and Trim paddles, as well as 12 buttons. See OI.java to reconfigure for a different joystick or game paddle.
 
-  Button 1:  Drives the robot at 3 feet per minute.
-  Button 2:  Switches the view of the tabs on the shuffle board.
-  Button 7:  Performs a "fast" ("loose") calibration of the swerve units.
-  Button 8:  Performs a "tight" calibration of the swerve units.
-  Button 10:  Performs a "tight" calibration on the Front Right unit only.
-  Button 11:  Spins the Front Right steering wheel at 100 rpm.
+Here is the current mappings of the buttons:
 
+  * Button 1:  Switch to moon drive mode -- while held down (See Below).
+  * Button 2:  Switches the view of the tabs on the shuffle board.
+  * Button 7:  Performs a "fast" ("loose") calibration of the swerve units.
+  * Button 8:  Performs a "tight" calibration of the swerve units.
+  * Button 10:  Performs a "tight" calibration on the Front Right unit only.
+  * Button 11:  Spins the Front Right steering wheel at 100 rpm.
+
+## Moon Mode
+The robot can "orbit" a fixed point while continually facing the point, much like the moon orbits the earth.  To use this mode, do the following:
+
+    1. Drive the robot towards the object to be orbited, until the object is touched.
+    2. Press the trigger button, and hold it down during the next steps.
+    3. Back away from the object, until you reach to the oribital distance.
+    4. Push forward on the stick, past zero, and then select a direction of orbit by moving the stick right or left.
+    5. When the trigger is released, normal driving is resumed.
+
+The orbit mode assumes the object is 12 inches in diameter.  If it is larger, then it won't be possible (without modification to this mode)
+to establish an exact orbit.  
 
 ## Swerve Calibration
 

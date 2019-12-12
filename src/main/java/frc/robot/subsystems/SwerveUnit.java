@@ -64,6 +64,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 // Class to manage/drive one Swerve Unit.  
 public class SwerveUnit extends SendableBase {
     private static double m_ticks_per_ring_rotation = 4096.0 * 132.0 / 36.0;
+    private static double m_inchs_per_rotaions = 4.0 * 3.141592654 / 6.0; 
     private double m_epsilon = 0.0000001;  // Smallest value before changing PID coefficents.
     private double m_offset = 0.0;
     private boolean m_enabled = true;
@@ -174,19 +175,7 @@ public class SwerveUnit extends SendableBase {
       m_steeringMotor.set(ControlMode.Velocity, ticks_per_100ms);
     }
 
-    // Clamps an arbitary angle into the region -180 to 180 degrees.
-    private double clamp_angle(double angle) {
-      angle = angle % 360.0;
-      if (angle > 180.0) {
-        angle -= 360.0;
-      }
-      if (angle < -180.0) {
-        angle += 360.0;
-      }
-      return angle;
-    }
-
-    // Uses a PID controller to move the ring to the given angle.
+     // Uses a PID controller to move the ring to the given angle.
     public void seekToAngle(double angle) {
       if (!m_enabled) return;
       m_desired_angle = AngleCals.clamp_angle(angle);
@@ -198,6 +187,21 @@ public class SwerveUnit extends SendableBase {
         m_steeringmode = 2;
       }
       m_steeringMotor.set(ControlMode.Position, target);
+    }
+
+    // Optimazed the input settings to reduce moving the steering ring.  If we
+    // can move the ring in the opisiate direction and revere the speed, do that.
+    public void setOptimizedSpeedAndDirection(double speed, double angle) {
+      double delta = Math.abs(AngleCals.delta(getSteeringAngle(), angle));
+      if (delta > 90.0) {
+        angle = angle - 180.0;
+        speed = -speed;
+      }
+      setDriveSpeed(speed);
+      // Also, if the speed is zero, don;t bother to move the steering ring.
+      if (Math.abs(speed) > 0.01) { 
+        seekToAngle(angle);
+      }
     }
 
     // Stop() -- Stops all motors on the swerve unit.
@@ -223,6 +227,13 @@ public class SwerveUnit extends SendableBase {
     // Return native rotations of the drive motor.
     public double getDriveEncoder() {
         return m_driveMotor.getEncoder().getPosition();
+    }
+
+    // Converts measured ticks on the drive unit to inches. (Note that on a NEO
+    // motor, one tick is one revolution of the motor shaft.)
+    public static double DriveTicksToInches(double nTicks) {
+      double dist = nTicks * m_inchs_per_rotaions;
+      return dist;
     }
 
     // Return Raw Ticks of Steering Encoder

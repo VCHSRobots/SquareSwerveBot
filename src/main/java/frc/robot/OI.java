@@ -17,6 +17,7 @@ import frc.robot.commands.CalibrateSwerveUnitCommand;
 import frc.robot.commands.CalibrateSwerveUnitCommand.CalibrationType;
 import frc.robot.commands.CalibrateSwerveSystemCommand;
 import frc.robot.commands.DriveSetSpeedCommand;
+import frc.robot.commands.MoonDriveCommand;
 import frc.robot.subsystems.SwerveDriveSubsystem.UnitID;
 
 /**
@@ -41,7 +42,7 @@ public class OI extends SendableBase {
   public OI() {
     setName("OI -- Driver Inputs");
     setupDashboard();
-    m_btn_1.whileHeld(new DriveSetSpeedCommand(3.0));
+    m_btn_1.whenPressed(new MoonDriveCommand());
     m_btn_2.whenPressed(new SwitchDashboardView());   
     m_btn_7.whenPressed(new CalibrateSwerveSystemCommand(CalibrationType.kFast));
     m_btn_8.whenPressed(new CalibrateSwerveSystemCommand(CalibrationType.kTight));

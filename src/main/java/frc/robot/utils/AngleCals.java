@@ -2,10 +2,6 @@
 
 package frc.robot.utils;
 
-
-/**
- * An example command.  You can replace me with your own command.
- */
 public class AngleCals {
 
   // Clamps an arbitary angle into the region -180 to 180 degrees.

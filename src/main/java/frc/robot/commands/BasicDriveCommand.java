@@ -12,14 +12,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotMap;
 import frc.robot.utils.AngleCals;
 
 // Simple Joystick connection to Swerve Drive.
 public class BasicDriveCommand extends Command {
   double m_heading = 0;
   double m_lastTime;
-  double m_maxTurnRate = 180.0;  // Degrees per second at full joystick position.
-  double m_maxSpeed = 15.0;      // Feet per second at full joystick position.
+  double m_maxTurnRate = RobotMap.MaxSpinRate / 2.0;  // Degrees per second at full joystick position.
+
 
   public BasicDriveCommand() {
     requires(Robot.m_swerve);
@@ -36,7 +37,7 @@ public class BasicDriveCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double speed = Robot.m_oi.getY() * m_maxSpeed;
+    double speed = Robot.m_oi.getY() * RobotMap.MaxSpeed;
     double turn_rate = Robot.m_oi.getX() * m_maxTurnRate;
     double current_time = Timer.getFPGATimestamp();
     double telp = current_time - m_lastTime;

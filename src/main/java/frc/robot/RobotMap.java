@@ -32,4 +32,12 @@ public class RobotMap {
   public static UIPoint SlotZeroForUI = new UIPoint(0,0);  // Location of Basic Inputs
   public static UIPoint SlotZeroForSU = new UIPoint(3,0);  // For layout of each Swerve Unit
   public static UIPoint SlotZeroForSS = new UIPoint(0,3);  // Full Swerve Drive Stuff
+
+  // Stuff that defines the geometery of the bot
+  public static double Len_WheelBase = 14.0;   // Distance between wheels, front-back, in inches.
+  public static double Len_TrackWidth = 14.0;  // Distance between wheels, left-right, in inches.
+
+  // Stuff that controls how the robot behaves
+  public static double MaxSpeed = 15.0;  // In Feet/Second
+  public static double MaxSpinRate = 360; // In Degrees/Second
 }

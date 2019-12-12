@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.RobotMap;
-import frc.robot.commands.BasicDriveCommand;
+import frc.robot.commands.AdvancedDriveCommand;;
 import frc.robot.utils.AngleCals;
 
 /**
@@ -65,7 +65,7 @@ public class SwerveDriveSubsystem extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new BasicDriveCommand());
+    setDefaultCommand(new AdvancedDriveCommand());
   }
 
   // Returns the given swerve unit.
@@ -137,6 +137,27 @@ public class SwerveDriveSubsystem extends Subsystem {
     m_BR.seekToAngle(angle);
     m_desired_heading = angle;
     m_mode_steering = "POS";
+  }
+
+  // Sets the speed of all the drive motors, in feet/sec.
+  public void setSpeed(double fl, double fr, double bl, double br) {
+    m_FL.setDriveSpeed(fl);
+    m_FR.setDriveSpeed(fr);
+    m_BL.setDriveSpeed(bl);
+    m_BR.setDriveSpeed(br);
+    m_desired_speed = 0.0;
+    m_mode_drive = "RPM++";
+  }
+
+  // Sets the heading of all the wheels, given as an angle in degrees, refereced
+  // from the front of the robot.
+  public void setHeading(double fl, double fr, double bl, double br) {
+    m_FL.seekToAngle(fl);
+    m_FR.seekToAngle(fr);
+    m_BL.seekToAngle(bl);
+    m_BR.seekToAngle(br);
+    m_desired_heading = 0.0;
+    m_mode_steering = "POS++";
   }
 
   public boolean isCalibrated() {

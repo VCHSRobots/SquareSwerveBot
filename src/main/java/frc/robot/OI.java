@@ -11,13 +11,8 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.SendableBase;
-import frc.robot.commands.SwitchDashboardView;
-import frc.robot.commands.SpinRingCommand;
-import frc.robot.commands.CalibrateSwerveUnitCommand;
+import frc.robot.commands.*;
 import frc.robot.commands.CalibrateSwerveUnitCommand.CalibrationType;
-import frc.robot.commands.CalibrateSwerveSystemCommand;
-import frc.robot.commands.DriveSetSpeedCommand;
-import frc.robot.commands.MoonDriveCommand;
 import frc.robot.subsystems.SwerveDriveSubsystem.UnitID;
 
 /**
@@ -43,7 +38,8 @@ public class OI extends SendableBase {
     setName("OI -- Driver Inputs");
     setupDashboard();
     m_btn_1.whenPressed(new MoonDriveCommand());
-    m_btn_2.whenPressed(new SwitchDashboardView());   
+    m_btn_2.whenPressed(new SwitchDashboardView());
+    m_btn_3.whenPressed(new StrafeDriveCommand());   
     m_btn_7.whenPressed(new CalibrateSwerveSystemCommand(CalibrationType.kFast));
     m_btn_8.whenPressed(new CalibrateSwerveSystemCommand(CalibrationType.kTight));
     m_btn_10.whenPressed(new CalibrateSwerveUnitCommand(UnitID.kFrontRight, CalibrationType.kTight));

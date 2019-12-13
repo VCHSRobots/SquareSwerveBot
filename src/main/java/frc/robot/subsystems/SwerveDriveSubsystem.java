@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.RobotMap;
-import frc.robot.commands.AdvancedDriveCommand;;
+import frc.robot.commands.AdvancedDriveCommand;
 import frc.robot.utils.AngleCals;
 
 /**

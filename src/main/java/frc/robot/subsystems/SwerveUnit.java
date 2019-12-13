@@ -1,6 +1,6 @@
 // SwerveUnit.java -- Driver for a single Swerve Unit
 
-// Basic Facts retarding the Square Drive Prototype Made in Fall 2019:
+// Basic Facts regarding the Square Drive Prototype Made in Fall 2019:
 //
 // Drive Base:  The Wheels are arranged in a square configuration, 
 // where the center of the wheels where they touch the ground is 14 inches.
@@ -38,6 +38,7 @@ package frc.robot.subsystems;
 import frc.robot.RobotMap;
 import frc.robot.utils.AngleCals;
 import frc.robot.utils.SparkMaxConfiguration;
+
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
@@ -54,6 +55,7 @@ import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -64,13 +66,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 // Class to manage/drive one Swerve Unit.  
 public class SwerveUnit extends SendableBase {
     private static double m_ticks_per_ring_rotation = 4096.0 * 132.0 / 36.0;
-    private static double m_inchs_per_rotaions = 4.0 * 3.141592654 / 6.0; 
+    // Circumference inches per motor rotation = pi*diameter / 6 
+    private static double m_inchs_per_rotaions = 3.141592654 * 4.0 / 6.0; 
     private double m_epsilon = 0.0000001;  // Smallest value before changing PID coefficents.
     private double m_offset = 0.0;
     private boolean m_enabled = true;
     private boolean m_isCalibrated = false;
     private String m_calibrationType = "None";
     private double m_desired_angle = 0.0;
+    private double m_desired_rpm = 0.0;
     private NetworkTableEntry m_ntentry_enable;
     private NetworkTableEntry m_ntentry_cal;
     private CANSparkMax m_driveMotor;
@@ -89,22 +93,29 @@ public class SwerveUnit extends SendableBase {
         m_name = name;
         m_islot = slot;
         m_offset = offset;
+
         m_driveMotor = new CANSparkMax(drive_id, MotorType.kBrushless);
         m_driveMotor.restoreFactoryDefaults();
-        m_driveMotor.setOpenLoopRampRate(0.2);
-        m_driveMotor.setClosedLoopRampRate(0.1);
+        m_driveMotor.setOpenLoopRampRate(0.15);
+        m_driveMotor.setClosedLoopRampRate(0.05);
         m_driveMotor.setSmartCurrentLimit(20, 10);
         m_driveMotor.setSecondaryCurrentLimit(20);
         m_driveMotor.enableVoltageCompensation(10.5);
-        m_PID_Drive_RPM = new SparkMaxConfiguration(5e-5, 1e-6, 0.0, 0.0);
+
+        // og  p 5e-5  i 1e-6  d 0.0  f 0.0  izone -/+0.0
+        m_PID_Drive_RPM = new SparkMaxConfiguration(3e-6, 3e-7, 0.0, 2e-4, 600);
         m_PID_Drive_RPM.configureController(m_driveMotor);
+        //m_driveMotor.getPIDController().set
+
         m_drivemode = 2;
 
         m_driveMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         m_driveMotor.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, false);
         m_driveMotor.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, false);
+
         m_limitswitch = new CANDigitalInput(m_driveMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
         m_limitswitch.enableLimitSwitch(false);
+
         m_steeringMotor = new WPI_TalonSRX(steering_id);
         m_steeringMotor.configFactoryDefault();
         m_steeringMotor.setNeutralMode(NeutralMode.Brake);
@@ -120,11 +131,13 @@ public class SwerveUnit extends SendableBase {
         m_steeringMotor.config_kP(0, 1.0);  // Set P constant.
         m_steeringMotor.config_kI(0, 0.0);
         m_steeringMotor.config_kD(0, 0.0);
+
         // When the steering motor is used in seek mode
         m_steeringMotor.config_kF(1, 0.0);  
         m_steeringMotor.config_kP(1, 0.21);  
         m_steeringMotor.config_kI(1, 0.0);
         m_steeringMotor.config_kD(1, 0.0);
+
         m_steeringMotor.configPeakOutputForward(0.75);  
         m_steeringMotor.configPeakOutputReverse(-0.75);
         m_steeringMotor.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_2Ms);
@@ -150,6 +163,7 @@ public class SwerveUnit extends SendableBase {
         m_PID_Drive_RPM.configureController(m_driveMotor);
         m_drivemode = 2;
       }
+      m_desired_rpm = rpm;
       m_driveMotor.getPIDController().setReference(rpm, ControlType.kVelocity);
     }
 
@@ -189,8 +203,8 @@ public class SwerveUnit extends SendableBase {
       m_steeringMotor.set(ControlMode.Position, target);
     }
 
-    // Optimazed the input settings to reduce moving the steering ring.  If we
-    // can move the ring in the opisiate direction and revere the speed, do that.
+    // Optimized the input settings to reduce moving the steering ring.  If we
+    // can move the ring in the opposite direction and reverse the speed, do that.
     public void setOptimizedSpeedAndDirection(double speed, double angle) {
       double delta = Math.abs(AngleCals.delta(getSteeringAngle(), angle));
       if (delta > 90.0) {
@@ -198,8 +212,8 @@ public class SwerveUnit extends SendableBase {
         speed = -speed;
       }
       setDriveSpeed(speed);
-      // Also, if the speed is zero, don;t bother to move the steering ring.
-      if (Math.abs(speed) > 0.01) { 
+      // Also, if the speed is zero, don't bother to move the steering ring.
+      if (Math.abs(speed) > 0.03) { 
         seekToAngle(angle);
       }
     }
@@ -325,11 +339,13 @@ public class SwerveUnit extends SendableBase {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("SwerveUnit");
+        builder.addDoubleProperty("_NEO Velocity", () -> m_driveMotor.getEncoder().getVelocity(), null);
+        builder.addDoubleProperty("_NEO Velocity Target", () -> m_desired_rpm, null);
         builder.addDoubleProperty ("Steering Angle", this::getSteeringAngle, null);
         builder.addDoubleProperty ("Desired Angle", () -> m_desired_angle, null);
         builder.addDoubleProperty ("Steering Encoder", this::getSteeringEncoder, null);
         builder.addDoubleProperty ("Drive Encoder", this::getDriveEncoder, null);
-        builder.addDoubleProperty ("Speed", this::getSpeed, null);
+        builder.addDoubleProperty ("_Speed", this::getSpeed, null);
         builder.addDoubleProperty ("Drive Current", this::getDriveCurrent, null);
         builder.addDoubleProperty ("Steering Current", this::getSteeringCurrent, null);
         builder.addDoubleProperty ("Steering Rate", this::getSteeringRate, null);

@@ -23,14 +23,15 @@ import frc.robot.subsystems.SwerveDriveSubsystem.UnitID;
 import frc.robot.utils.DeadbandMaker;
 
 // Simple Joystick connection to Swerve Drive.
-public class AdvancedDriveCommand extends Command {
+public class StrafeDriveCommand extends Command {
   private double m_r;                    // Calculated once at init = Diagonal from Left-Front to Back-Right
   private double m_lr;                   // Calculated once at init = WheelBase / Diagonal
   private double m_wr;                   // Calculated once at init = TrackWidth / Diagonal
   private double m_gyro_angle = 0.0;     // For future features.  Just set this in the execute() routine.
   private double m_spin_scale = 1.0;     // Calculated once at init 
+  private boolean m_isFinished = false;
 
-  public AdvancedDriveCommand() {
+  public StrafeDriveCommand() {
     requires(Robot.m_swerve);
     this.setInterruptible(true);
   }
@@ -43,19 +44,24 @@ public class AdvancedDriveCommand extends Command {
     m_wr = RobotMap.Len_TrackWidth / m_r;
     double max_unchecked_spin = 360.0 * RobotMap.MaxSpeed * 12.0 / (Math.PI * m_r);
     m_spin_scale = RobotMap.MaxSpinRate / max_unchecked_spin;
+    m_isFinished = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    if(!Robot.m_oi.getRawButton(3)) {
+      m_isFinished = true;
+      return;
+    } 
     double str = Robot.m_oi.getX();
     double fwd = Robot.m_oi.getY();
-    double rcw = Robot.m_oi.getTwist();
+    double rcw = 0;
 
     // The stick is sensitive.  HEre we introduce a deadband on each axis.
     str = DeadbandMaker.addDeadband(str, 0.5);
     fwd = DeadbandMaker.addDeadband(fwd, 0.5);
-    rcw = DeadbandMaker.addDeadband(rcw, 0.4);
+    //rcw = 0; assigned above
 
     // Here, we need to scale back the twist motion.  If unchecked, a full twist of 1.0
     // would lead to full speed on the wheels -- which for a normal robot, would be
@@ -119,7 +125,7 @@ public class AdvancedDriveCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false; // Runs until interrupted
+    return m_isFinished; // Runs until interrupted
   }
 
   // Called once after isFinished returns true

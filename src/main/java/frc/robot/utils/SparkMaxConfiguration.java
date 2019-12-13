@@ -2,10 +2,13 @@
 
 package frc.robot.utils;
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.Spark;
+
 import com.revrobotics.CANPIDController;
 
 /**
- * An example command.  You can replace me with your own command.
+ * 
  */
 public class SparkMaxConfiguration {
   public double m_P = 0.0;
@@ -20,6 +23,13 @@ public class SparkMaxConfiguration {
   }
 
   public SparkMaxConfiguration(double p, double i, double d, double f) {
+    m_P = p;
+    m_I = i;
+    m_D = d;
+    m_F = f;
+  }
+  public SparkMaxConfiguration(double p, double i, double d, double f, double izone) {
+    m_IZone =  izone;
     m_P = p;
     m_I = i;
     m_D = d;

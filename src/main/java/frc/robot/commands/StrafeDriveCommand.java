@@ -1,18 +1,7 @@
-// AdvancedDriveCommand.java -- True, advanced control, (hopefully)
+// StrafeDriveCommand.java -- Strafe Drive Mode
 
-// In this control system, the algorithm and equations 
-// developed by Ether (3/28/2011) found on Chief Delphi
-// are implemented.  This yeilds a control system 
-// as follows:
-// 
-//  The Y axis controls the forward/reverse motion of the bot.
-//  The X axis controls the right-left strafe motion bot.
-//  The Twist axis controls the clockwize rotation of the bot.
-//
-// This means the operator can just point the joystick in the
-// desired direction for the bot, and twist the stick to 
-// spin the bot.  Spinning can occur even while the bot is
-// moving in a straight line.
+// This mode under development.  Currently, by holding down button 3, causes 
+// the twist to be ignored, and will drive streight.
 
 package frc.robot.commands;
 

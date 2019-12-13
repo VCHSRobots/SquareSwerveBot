@@ -41,12 +41,13 @@ All motors are controlled by PID loops so that they can be commanded with human 
 ## How To Drive
 The current drive offers true 3-degrees of freedom.  The X and Y of the joystick are used to indicate direction and speed.  Just point and go.  The Z axis (Twist) will contorl the robot's rotation about it's center, even while moving.
 
-Testing was done with a Logitech Extreme 3D joystick which provides X, Y, Twist, and Trim paddles, as well as 12 buttons. See OI.java to reconfigure for a different joystick or game paddle.
+Testing was done with a Logitech Extreme 3D joystick which provides X, Y, Twist, and Trim paddles, as well as 12 buttons. See OI.java to reconfigure for a different joystick or game paddle.  It should be easy to convert the code for use with PS3 and/or XBox game pads.
 
 Here is the current mappings of the buttons:
 
-  * Button 1:  Switch to moon drive mode -- while held down (See Below).
+  * Button 1:  Switch to moon drive mode -- while held down (see below).
   * Button 2:  Switches the view of the tabs on the shuffle board.
+  * Button 3:  Strafe Drive -- while held down (see below).
   * Button 7:  Performs a "fast" ("loose") calibration of the swerve units.
   * Button 8:  Performs a "tight" calibration of the swerve units.
   * Button 10:  Performs a "tight" calibration on the Front Right unit only.
@@ -63,6 +64,12 @@ The robot can "orbit" a fixed point while continually facing the point, much lik
 
 The orbit mode assumes the object is 12 inches in diameter.  If it is larger, then it won't be possible (without modification to this mode)
 to establish an exact orbit.  
+
+## Strafe Drive Mode
+Someday this will cause the robot to only move directions that are parallel to is't frame, or parallel to the field.  For now, it just
+disabled the "twist", so that the robot will only move and not rotate around its axis.
+
+This command is active while button 3 is being pressed.
 
 ## Swerve Calibration
 

@@ -112,7 +112,7 @@ public class MoonDriveCommand extends Command {
     ticks3 = Math.abs(ticks3 - m_start0[2]);
     ticks4 = Math.abs(ticks4 - m_start0[3]);
     double average_ticks = 0.25 * (ticks1 + ticks2 + ticks3 + ticks4);
-    m_radius = SwerveUnit.DriveTicksToInches(average_ticks);
+    m_radius = 0.5*RobotMap.Len_WheelBase + 5 + SwerveUnit.DriveTicksToInches(average_ticks);  
     System.out.printf("m_radius = %10.2f\n", m_radius);
     m_istage = 1;
     //stage_1();  // Optimize here. Save's waiting 50ms before starting stage 1.

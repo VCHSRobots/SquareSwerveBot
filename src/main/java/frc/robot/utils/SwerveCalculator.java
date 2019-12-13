@@ -1,5 +1,8 @@
 // SwerveCalculator.java -- object to calculate swerve angles.
 
+// NOTE! This Class HAS NOT BEEN Tested or used by the rest of the robot code!
+// It is currently a work in progress.
+
 package frc.robot.utils;
 import frc.robot.Robot;
 import frc.robot.RobotMap;

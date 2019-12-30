@@ -17,6 +17,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.SwerveDriveSubsystem.UnitID;
@@ -51,11 +54,12 @@ public class AdvancedDriveCommand extends Command {
     double str = Robot.m_oi.getX();
     double fwd = Robot.m_oi.getY();
     double rcw = Robot.m_oi.getTwist();
+    boolean isFieldCentric = Robot.m_oi.getRawButton(6);
 
-    // The stick is sensitive.  HEre we introduce a deadband on each axis.
-    str = DeadbandMaker.addDeadband(str, 0.5);
-    fwd = DeadbandMaker.addDeadband(fwd, 0.5);
-    rcw = DeadbandMaker.addDeadband(rcw, 0.4);
+    // The stick is sensitive.  Here we introduce a deadband on each axis.
+    str = DeadbandMaker.addDeadband(str, 0.3);
+    fwd = DeadbandMaker.addDeadband(fwd, 0.3);
+    rcw = DeadbandMaker.addDeadband(rcw, 0.3);
 
     // Here, we need to scale back the twist motion.  If unchecked, a full twist of 1.0
     // would lead to full speed on the wheels -- which for a normal robot, would be
@@ -64,6 +68,12 @@ public class AdvancedDriveCommand extends Command {
   
     // Convert the inputs for use in field-centric orienation.  If 
     // field-centric orientation is not used, set the gyro angle to zero.
+    if (isFieldCentric) {
+      m_gyro_angle = Robot.m_swerve.getNavX().getAngle();
+    }
+    else {
+      m_gyro_angle = 0;
+    }
     double g = m_gyro_angle * Math.PI / 180.0;
     double temp = fwd * Math.cos(g) + str * Math.sin(g);
     str = -fwd * Math.sin(g) + str * Math.cos(g);

@@ -40,6 +40,7 @@ public class OI extends SendableBase {
     m_btn_8.whenPressed(new CalibrateSwerveSystemCommand(CalibrationType.kTight));
     m_btn_10.whenPressed(new CalibrateSwerveUnitCommand(UnitID.kFrontRight, CalibrationType.kTight));
     m_btn_11.whileHeld(new SpinRingCommand(UnitID.kFrontRight, 100.0));
+    m_btn_5.whenPressed(new ZeroAngleCommand());
   }
 
   // Returns the condition of the given button number
@@ -59,7 +60,7 @@ public class OI extends SendableBase {
 
   // Returns the twist axis on the Joystick
   public double getTwist() {
-    return m_joystick.getZ();
+    return m_joystick.getRawAxis(4);
   }
 
   // Retruns the trim axis on the Joystick

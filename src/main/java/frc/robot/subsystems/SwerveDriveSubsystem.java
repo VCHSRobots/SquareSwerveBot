@@ -6,6 +6,12 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SPI.Port;
+
+import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.BoardAxis;
+
 import frc.robot.RobotMap;
 import frc.robot.commands.AdvancedDriveCommand;
 import frc.robot.utils.AngleCals;
@@ -22,6 +28,9 @@ public class SwerveDriveSubsystem extends Subsystem {
       this.value = value;
     }
   }
+
+  private AHRS m_navX = new AHRS(SPI.Port.kMXP);
+  private boolean m_isFieldCentric = false;
 
   public SwerveUnit m_FL; 
   public SwerveUnit m_FR; 
@@ -187,6 +196,18 @@ public class SwerveDriveSubsystem extends Subsystem {
     return m_mode_drive + " / " + m_mode_steering;
   }
 
+  public AHRS getNavX() {
+    return m_navX;
+  }
+
+  public void zeroGyroAngle() {
+    m_navX.zeroYaw();
+  }
+
+  public boolean getIsFieldCentric() {
+    return m_isFieldCentric;
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
       builder.setSmartDashboardType("SwerveDrive");
@@ -198,6 +219,9 @@ public class SwerveDriveSubsystem extends Subsystem {
       builder.addDoubleProperty("Headging Average", this::getAverageHeading, null);
       builder.addDoubleProperty("Speed Desired", () -> m_desired_speed, null);
       builder.addDoubleProperty("Speed Average", this::getAverageSpeed, null);
+      builder.addDoubleProperty("navX Yaw", ()->m_navX.getYaw(), null);
+      builder.addDoubleProperty("navX Pitch", ()->m_navX.getPitch(), null);
+      builder.addDoubleProperty("navX Angle", ()->m_navX.getAngle(), null);
   }
 
   public void setupDashboard() {

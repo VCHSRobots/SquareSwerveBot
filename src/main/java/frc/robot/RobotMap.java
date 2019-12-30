@@ -39,5 +39,5 @@ public class RobotMap {
 
   // Stuff that controls how the robot behaves
   public static double MaxSpeed = 15.0;  // In Feet/Second
-  public static double MaxSpinRate = 360; // In Degrees/Second
+  public static double MaxSpinRate = 540; // In Degrees/Second
 }

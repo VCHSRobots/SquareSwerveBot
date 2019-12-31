@@ -21,4 +21,15 @@ public class DeadbandMaker {
     }
     return v / (1 - p2);
   }
+
+  // TODO
+  // public static vector2 addDeadband2D(vector2 v, double p) {
+  //   double p2 = 0.5 * Math.abs(p);
+  //   if (Math.abs(v.getMagnitude()) < p2) {
+  //     return new vector2(0.0, 0.0);
+  //   } 
+    
+  //   double x = v.getX() - Math.cos(v.getAngleRadians());
+    
+  // }
 }

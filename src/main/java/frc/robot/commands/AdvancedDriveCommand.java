@@ -55,9 +55,18 @@ public class AdvancedDriveCommand extends Command {
     boolean isFieldCentric = Robot.m_oi.getRawButton(6);
 
     // The stick is sensitive.  Here we introduce a deadband on each axis.
-    str = DeadbandMaker.addDeadband(str, 0.3);
-    fwd = DeadbandMaker.addDeadband(fwd, 0.3);
-    rcw = DeadbandMaker.addDeadband(rcw, 0.3);
+    // square deadband
+    str = DeadbandMaker.addDeadband(str, 0.1);
+    fwd = DeadbandMaker.addDeadband(fwd, 0.1);
+    rcw = DeadbandMaker.addDeadband(rcw, 0.1);
+    // circle deadband
+    // if (Math.sqrt(str*str + fwd*fwd) < 0.3) {
+    //   str = 0.0;
+    //   fwd = 0.0;
+    // } else {
+
+    // }
+
 
     // Here, we need to scale back the twist motion.  If unchecked, a full twist of 1.0
     // would lead to full speed on the wheels -- which for a normal robot, would be

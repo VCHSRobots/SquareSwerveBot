@@ -129,10 +129,10 @@ public class SwerveUnit extends SendableBase {
 
         // When the steering motor is used in seek mode
         m_steeringMotor.config_kF(1, 0.0);  
-        m_steeringMotor.config_kP(1, 0.21);  
-        m_steeringMotor.config_kI(1, 0.001);
+        m_steeringMotor.config_kP(1, 0.22);  
+        m_steeringMotor.config_kI(1, 0.0);
         m_steeringMotor.config_kD(1, 0.0);
-        m_steeringMotor.config_IntegralZone(1, 1500);
+        m_steeringMotor.config_IntegralZone(1, 500);
 
         m_steeringMotor.configPeakOutputForward(0.75);  
         m_steeringMotor.configPeakOutputReverse(-0.75);

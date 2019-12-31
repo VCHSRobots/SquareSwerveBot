@@ -40,7 +40,7 @@ public class CalibrateSwerveUnitCommand extends Command {
   protected void initialize() {
     m_isFinished = false;
     m_istage = 0;
-    System.out.printf("CalibrateServeUnit Command For Unit %s started.\n", m_unit.getName());
+    System.out.printf("CalibrateServeUnitCommand For Unit %s started.\n", m_unit.getName());
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -140,7 +140,7 @@ public class CalibrateSwerveUnitCommand extends Command {
     // Back away, and get a better reading of where the prime point is.  
     m_starting_angle = m_unit.getAbsoluteAngle();
     m_starting_time = Timer.getFPGATimestamp();
-    m_unit.setSteeringRate(-30.0);
+    m_unit.setSteeringRate(-40.0);
     m_istage = 3;
   }
 
@@ -149,7 +149,7 @@ public class CalibrateSwerveUnitCommand extends Command {
     // Wait for it to get 45 degrees away, then reverse it, and move
     // to the next stage.
     double angle_diff = Math.abs(m_unit.getAbsoluteAngle() - m_starting_angle);
-    if (angle_diff > 45.0) {
+    if (angle_diff > 30.0) {
       // We reached the turn around point.
       m_unit.setSteeringPercentage(0.0);
       if (m_unit.isAtPrime()) {
@@ -160,7 +160,7 @@ public class CalibrateSwerveUnitCommand extends Command {
       }
       m_starting_angle = m_unit.getAbsoluteAngle();
       m_starting_time = Timer.getFPGATimestamp();
-      m_unit.setSteeringRate(30.0);
+      m_unit.setSteeringRate(20.0);
       m_istage = 4;
       return;
     }
@@ -186,7 +186,7 @@ public class CalibrateSwerveUnitCommand extends Command {
     }
     // Have we moved too far? 
     double delta = Math.abs(m_unit.getAbsoluteAngle() - m_starting_angle);
-    if (delta > 60.0) {
+    if (delta > 50.0) {
       m_unit.setSteeringPercentage(0.0);
       print_error("In stage 4. Moved too far in slow mode without finding the prime point.");
       m_istage = 10;  // Go ahead and use loose calibration.

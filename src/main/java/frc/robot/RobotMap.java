@@ -38,6 +38,6 @@ public class RobotMap {
   public static double Len_TrackWidth = 14.0;  // Distance between wheels, left-right, in inches.
 
   // Stuff that controls how the robot behaves
-  public static double MaxSpeed = 15.0;  // In Feet/Second
+  public static double MaxSpeed = 12.0;  // In Feet/Second
   public static double MaxSpinRate = 540; // In Degrees/Second
 }

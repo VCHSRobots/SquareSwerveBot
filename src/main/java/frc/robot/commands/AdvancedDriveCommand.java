@@ -18,8 +18,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.SwerveDriveSubsystem.UnitID;
@@ -74,6 +72,7 @@ public class AdvancedDriveCommand extends Command {
     else {
       m_gyro_angle = 0;
     }
+
     double g = m_gyro_angle * Math.PI / 180.0;
     double temp = fwd * Math.cos(g) + str * Math.sin(g);
     str = -fwd * Math.sin(g) + str * Math.cos(g);

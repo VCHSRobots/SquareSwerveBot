@@ -70,6 +70,7 @@ public class SwerveUnit extends SendableBase {
     private String m_calibrationType = "None";
     private double m_desired_angle = 0.0;
     private double m_desired_rpm = 0.0;
+    private double m_desired_steering_ticks = 0.0;
     private NetworkTableEntry m_ntentry_enable;
     private NetworkTableEntry m_ntentry_cal;
     private CANSparkMax m_driveMotor;
@@ -122,17 +123,17 @@ public class SwerveUnit extends SendableBase {
         m_steeringMotor.setInverted(false);
         
         // The motors are capable of over 360 degrees/sec with constansts below.
-        m_steeringMotor.config_kF(0, 0.6);  // Produces about 220 degrees/sec
+        m_steeringMotor.config_kF(0, 0.5);  // Produces about 220 degrees/sec
         m_steeringMotor.config_kP(0, 1.0);  // Set P constant.
         m_steeringMotor.config_kI(0, 0.0);
         m_steeringMotor.config_kD(0, 0.0);
 
         // When the steering motor is used in seek mode
         m_steeringMotor.config_kF(1, 0.0);  
-        m_steeringMotor.config_kP(1, 0.22);  
+        m_steeringMotor.config_kP(1, 0.33);  
         m_steeringMotor.config_kI(1, 0.0);
-        m_steeringMotor.config_kD(1, 0.0);
-        m_steeringMotor.config_IntegralZone(1, 500);
+        m_steeringMotor.config_kD(1, 3.0);
+        m_steeringMotor.config_IntegralZone(1, 250);
 
         m_steeringMotor.configPeakOutputForward(0.75);  
         m_steeringMotor.configPeakOutputReverse(-0.75);
@@ -191,12 +192,12 @@ public class SwerveUnit extends SendableBase {
       m_desired_angle = AngleCals.clamp_angle(angle);
       double current_angle = getSteeringAngle();
       double delta = AngleCals.delta(current_angle, m_desired_angle);
-      double target = getSteeringEncoder() + (delta * m_ticks_per_ring_rotation / 360.0);
+      m_desired_steering_ticks = getSteeringEncoder() + (delta * m_ticks_per_ring_rotation / 360.0);
       if (m_steeringmode != 2) {
         m_steeringMotor.selectProfileSlot(1, 0);
         m_steeringmode = 2;
       }
-      m_steeringMotor.set(ControlMode.Position, target);
+      m_steeringMotor.set(ControlMode.Position, m_desired_steering_ticks);
     }
 
     // Optimized the input settings to reduce moving the steering ring.  If we
@@ -340,6 +341,7 @@ public class SwerveUnit extends SendableBase {
         builder.addDoubleProperty ("Steering Angle", this::getSteeringAngle, null);
         builder.addDoubleProperty ("Desired Angle", () -> m_desired_angle, null);
         builder.addDoubleProperty ("Steering Encoder", this::getSteeringEncoder, null);
+        builder.addDoubleProperty ("Steering Target", () -> m_desired_steering_ticks, null);
         builder.addDoubleProperty ("Drive Encoder", this::getDriveEncoder, null);
         builder.addDoubleProperty ("_Speed", this::getSpeed, null);
         builder.addDoubleProperty ("Drive Current", this::getDriveCurrent, null);

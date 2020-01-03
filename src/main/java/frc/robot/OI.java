@@ -4,6 +4,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.SendableBase;
@@ -33,9 +35,61 @@ public class OI extends SendableBase {
   public OI() {
     setName("OI -- Driver Inputs");
     setupDashboard();
-    m_btn_1.whenPressed(new MoonDriveCommand());
-    m_btn_2.whenPressed(new SwitchDashboardView());
-    m_btn_3.whenPressed(new StrafeDriveCommand());   
+    //m_btn_1.whenPressed(new MoonDriveCommand());
+    //m_btn_2.whenPressed(new SwitchDashboardView());
+    //m_btn_3.whenPressed(new StrafeDriveCommand());   
+    {
+      CommandGroup group = new CommandGroup();
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BL.seekToAngle(180)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BR.seekToAngle(180)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FL.seekToAngle(180)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FR.seekToAngle(180)));
+      m_btn_1.whileHeld(group);
+    }
+    
+    {
+      CommandGroup group = new CommandGroup();
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BL.seekToAngle(90)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BR.seekToAngle(90)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FL.seekToAngle(90)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FR.seekToAngle(90)));
+      m_btn_2.whileHeld(group);
+    }
+
+    {
+      CommandGroup group = new CommandGroup();
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BL.seekToAngle(270)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BR.seekToAngle(270)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FL.seekToAngle(270)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FR.seekToAngle(270)));
+      m_btn_3.whileHeld(group);
+    }
+
+    {
+      CommandGroup group = new CommandGroup();
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BL.seekToAngle(0)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BR.seekToAngle(0)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FL.seekToAngle(0)));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FR.seekToAngle(0)));
+      m_btn_4.whileHeld(group);
+    }
+
+    {
+      CommandGroup group = new CommandGroup();
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BL.stop()));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_BR.stop()));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FL.stop()));
+      group.addParallel(new InstantCommand(() -> Robot.m_swerve.m_FR.stop()));
+      if (m_joystick.getPOV(7) != -1) {
+        group.start();
+      }
+      else {
+        group.cancel();
+        group.close();
+      }
+      //m_btn_1.whileHeld(group);
+    }
+
     m_btn_7.whenPressed(new CalibrateSwerveSystemCommand(CalibrationType.kFast));
     m_btn_8.whenPressed(new CalibrateSwerveSystemCommand(CalibrationType.kTight));
     m_btn_10.whenPressed(new CalibrateSwerveUnitCommand(UnitID.kFrontRight, CalibrationType.kTight));

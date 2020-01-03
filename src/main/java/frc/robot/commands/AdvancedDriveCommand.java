@@ -17,11 +17,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.SwerveDriveSubsystem.UnitID;
 import frc.robot.utils.DeadbandMaker;
+import frc.robot.utils.vector2;
 
 // Simple Joystick connection to Swerve Drive.
 public class AdvancedDriveCommand extends Command {
@@ -59,14 +60,12 @@ public class AdvancedDriveCommand extends Command {
     str = DeadbandMaker.addDeadband(str, 0.1);
     fwd = DeadbandMaker.addDeadband(fwd, 0.1);
     rcw = DeadbandMaker.addDeadband(rcw, 0.1);
-    // circle deadband
-    // if (Math.sqrt(str*str + fwd*fwd) < 0.3) {
-    //   str = 0.0;
-    //   fwd = 0.0;
-    // } else {
+    // circle / linear bands combined deadband
+    // TODO fix deadband
+    //vector2 jsVector = DeadbandMaker.addDeadband2D(new vector2(str, fwd), 0.4, 0.1);
 
-    // }
-
+    //str = jsVector.getX();
+    //fwd = jsVector.getY();
 
     
     // Here, we need to scale back the twist motion.  If unchecked, a full twist of 1.0

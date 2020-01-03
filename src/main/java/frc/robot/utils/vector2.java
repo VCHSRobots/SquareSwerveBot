@@ -14,12 +14,12 @@ public class vector2 {
     double m_x = 0.0;
     double m_y = 0.0;
 
-    vector2(double x, double y) {
+    public vector2(double x, double y) {
         m_x = x;
         m_y = y;
     }
 
-    vector2() {
+    public vector2() {
         this(0.0, 0.0);
     }
 

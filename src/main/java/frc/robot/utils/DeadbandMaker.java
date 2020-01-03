@@ -22,14 +22,30 @@ public class DeadbandMaker {
     return v / (1 - p2);
   }
 
-  // TODO
-  // public static vector2 addDeadband2D(vector2 v, double p) {
-  //   double p2 = 0.5 * Math.abs(p);
-  //   if (Math.abs(v.getMagnitude()) < p2) {
-  //     return new vector2(0.0, 0.0);
-  //   } 
-    
-  //   double x = v.getX() - Math.cos(v.getAngleRadians());
-    
-  // }
+  //TODO Fix this, strafe x is backwards. verify signs of quadrants, etc
+  /*
+  @param v: vector to apply deadband on
+  @param r: radius of center circle deadband area, should be larger than l
+  @param l: linear bands outside of center cirle deadband to exclude
+  */
+  public static vector2 addDeadband2D(vector2 v, double r, double l) {
+    double x = 0.0;
+    double y = 0.0;
+    //assert(r >= l);
+    if (Math.abs(v.getMagnitude()) > Math.abs(r)) {
+      double theta = v.getAngleRadians();
+
+      if (Math.abs(v.getX()) > Math.abs(l)) {
+        x = v.getX() - Math.copySign(Math.cos(theta), v.getX());
+        x = x / (1 - Math.cos(theta));
+      }
+
+      if (Math.abs(v.getY()) > Math.abs(l)) {
+        y = v.getY() - Math.copySign(Math.cos(theta), v.getY());
+        y = y / (1 - Math.cos(theta));
+      }
+    }
+
+    return new vector2(x,y);
+  }
 }
